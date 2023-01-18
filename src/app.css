@@ -1,0 +1,68 @@
+.bdp-button {
+    position: absolute;
+    right: 200px;
+    z-index: 100;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.bdp-button-text {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.bdp-setting {
+    width: 100%;
+    font-size: 16px;
+    margin-top: 12px;
+}
+.bdp-setting td {
+    height: 36px;
+    padding-right: 10px;
+    vertical-align: middle;
+}
+.bdp-setting input {
+    height: 26px;
+    vertical-align: middle;
+    font-size: 16px;
+    color: #000;
+    border: 1px solid #000;
+}
+.bdp-setting input[type='text'] {
+    width: 100%;
+}
+.bdp-setting button {
+    margin-top: 20px;
+    width: 100%;
+    height: 36px;
+}
+.bdp-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.failList{
+    outline: 1px solid red;
+    font-size: 12px;
+
+}
+.failList > div{
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.failList > div:nth-child(2n){
+    background-color: rgba(0,0,0,.2);
+}
+.bdp-buttons{
+    display: flex;
+}
+.bdp-buttons-close{
+    flex: 2 2 100%;
+}
+.bdp-buttons-redo{
+
+}
