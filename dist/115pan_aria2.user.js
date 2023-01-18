@@ -8,6 +8,7 @@
 // @match        *://115.com/?ct=file*
 // @connect      115.com
 // @connect      192.168.50.44
+// @connect      *
 // @grant        GM.xmlHttpRequest
 // @grant        GM.setValue
 // @grant        GM.getValue
