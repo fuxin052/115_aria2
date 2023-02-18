@@ -5,6 +5,8 @@
 https://github.com/fuxin052/115_aria2/raw/main/dist/115pan_aria2.user.js
 
 
+## 鼠标右键点击按钮可以打开设置界面
+
 如果出现以下提示, 请选择 `总是允许` 即可
 ![image](https://user-images.githubusercontent.com/46592199/213325190-0b1df296-a53d-4dc2-9411-cdaeba670576.png)
 
