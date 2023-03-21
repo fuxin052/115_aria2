@@ -1,7 +1,8 @@
 import { FunctionComponent } from 'preact';
 import { useState, useCallback } from 'preact/hooks';
+import { defaultSetting } from './constant';
 import Modal from './modal';
-import { defaultSetting, getSetting, saveSetting } from './utils';
+import { getSetting, saveSetting } from './utils';
 
 type Props = {
     visible: boolean;
@@ -12,8 +13,8 @@ export const Setting: FunctionComponent<Props> = (props: Props) => {
     const [data, setData] = useState(getSetting);
 
     const change = (e: any) => {
-        const { name, value, checked } = e.target;
-        const newValue = name === 'check' ? checked : value;
+        const { name, value, checked, type } = e.target;
+        const newValue = type === 'checkbox' ? checked : value;
         setData(o => ({ ...o, [name]: newValue }));
     };
 
@@ -96,6 +97,26 @@ export const Setting: FunctionComponent<Props> = (props: Props) => {
                         ms
                     </td>
                 </tr>
+                <tr>
+                    <td title="">自定义UA</td>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="useSystemUserAgent"
+                            checked={data.useSystemUserAgent}
+                            onChange={change}
+                        />
+                        使用浏览器UA
+                        <input
+                            type="text"
+                            name="customUserAgent"
+                            disabled={data.useSystemUserAgent}
+                            value={data.customUserAgent}
+                            onChange={change}
+                        />
+                    </td>
+                </tr>
+
                 <tr>
                     <td>
                         <button onClick={props.onClose}>取消</button>

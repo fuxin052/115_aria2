@@ -1,6 +1,6 @@
 import { FileObjResolveType, FileObjType, FolderObjType } from './types';
 import EventEmitter from 'eventemitter3';
-import { defer, waitTime, xhrGet, xhrPost } from './utils';
+import { defer, getUA, waitTime, xhrGet, xhrPost } from './utils';
 import { secret } from './secret';
 
 export class Resolve extends EventEmitter {
@@ -65,7 +65,7 @@ export class Resolve extends EventEmitter {
             `data=${encodeURIComponent(data)}`,
             {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                // 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36 115Browser/25.0.4.1',
+                'User-Agent': getUA(),
             }
         )
             .then(json => {

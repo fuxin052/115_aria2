@@ -2,8 +2,6 @@ import { render } from 'preact';
 import { App } from './app';
 import './index.css';
 import { FileObjType, FolderObjType } from './types';
-import { waitTime, xhrGet, xhrPost } from './utils';
-import { GM_cookie } from '$';
 
 /** 入口方法, 并从页面获取数据供后面使用 */
 export class Pan115 {

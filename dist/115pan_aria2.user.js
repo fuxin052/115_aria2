@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         115pan_aria2
 // @namespace    115pan_aria2
-// @version      1.1.5
+// @version      1.1.6
 // @author       f
 // @description  115文件导出到 Aria2
 // @icon         https://115.com/web_icon.jpg
@@ -29,7 +29,7 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
+var vite_plugin_monkey_599159e48f2f4 = function(exports) {
   var _a, _b;
   "use strict";
   var n, l$1, u$2, t, o$3, f$1 = {}, e$1 = [], c$1 = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
@@ -441,6 +441,16 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
   r.GM_info;
   r.GM_cookie;
   var u = (...e2) => r.GM_setValue(...e2), o$1 = (...e2) => r.GM_addValueChangeListener(...e2), d = (...e2) => r.GM_removeValueChangeListener(...e2), b = (...e2) => r.GM_xmlhttpRequest(...e2), h = (...e2) => r.GM_getValue(...e2);
+  const defaultSetting = {
+    url: "http://127.0.0.1:6800/jsonrpc",
+    token: "123456",
+    dir: "",
+    check: false,
+    checkMin: "0",
+    interval: "300",
+    useSystemUserAgent: true,
+    customUserAgent: navigator.userAgent
+  };
   const waitTime = (t2) => {
     t2 = t2 || parseInt(getSetting().interval) || 300;
     return new Promise((r2) => setTimeout(r2, t2));
@@ -528,15 +538,17 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
     });
   };
   const saveSetting = (data) => {
-    u("115aria2_config", JSON.stringify(data));
-  };
-  const defaultSetting = {
-    url: "http://127.0.0.1:6800/jsonrpc",
-    token: "123456",
-    dir: "",
-    check: false,
-    checkMin: "0",
-    interval: "300"
+    const n2 = {};
+    let key;
+    for (key in defaultSetting) {
+      if (Object.prototype.hasOwnProperty.call(defaultSetting, key)) {
+        const element = defaultSetting[key];
+        if (data[key] !== element || key === "customUserAgent") {
+          n2[key] = data[key];
+        }
+      }
+    }
+    u("115aria2_config", JSON.stringify(n2));
   };
   const getSetting = () => {
     try {
@@ -550,6 +562,15 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
     } catch (error) {
       return defaultSetting;
     }
+  };
+  const getUA = () => {
+    const {
+      useSystemUserAgent,
+      customUserAgent
+    } = getSetting();
+    if (useSystemUserAgent)
+      return navigator.userAgent;
+    return customUserAgent || "";
   };
   function uuid() {
     var d2 = new Date().getTime();
@@ -594,7 +615,7 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
       const other = {
         dir: this.dir || void 0,
         out: filename,
-        header: [`User-Agent: ${navigator.userAgent}`, `Referer: https://115.com/`]
+        header: [`User-Agent: ${getUA()}`, `Referer: https://115.com/`]
       };
       let rpcData = {
         id: item.sha1 || String(Date.now()),
@@ -3067,7 +3088,8 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
         pickcode
       }), timestamp);
       return xhrPost(`https://proapi.115.com/app/chrome/downurl?t=${timestamp}`, `data=${encodeURIComponent(data)}`, {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": getUA()
       }).then((json) => {
         if (json.state) {
           var str = secret.decode(json.data, key);
@@ -3409,9 +3431,10 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
       const {
         name,
         value,
-        checked
+        checked,
+        type
       } = e2.target;
-      const newValue = name === "check" ? checked : value;
+      const newValue = type === "checkbox" ? checked : value;
       setData((o2) => ({
         ...o2,
         [name]: newValue
@@ -3494,6 +3517,24 @@ var vite_plugin_monkey_42cfd1ac7860b = function(exports) {
               onChange: change,
               placeholder: defaultSetting.interval
             }), "ms"]
+          })]
+        }), o("tr", {
+          children: [o("td", {
+            title: "",
+            children: "\u81EA\u5B9A\u4E49UA"
+          }), o("td", {
+            children: [o("input", {
+              type: "checkbox",
+              name: "useSystemUserAgent",
+              checked: data.useSystemUserAgent,
+              onChange: change
+            }), "\u4F7F\u7528\u6D4F\u89C8\u5668UA", o("input", {
+              type: "text",
+              name: "customUserAgent",
+              disabled: data.useSystemUserAgent,
+              value: data.customUserAgent,
+              onChange: change
+            })]
           })]
         }), o("tr", {
           children: [o("td", {

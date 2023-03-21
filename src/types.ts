@@ -1,3 +1,5 @@
+import { defaultSetting } from "./constant";
+
 export interface FileObjType {
     isdir: false;
     sha1: string;
@@ -20,11 +22,6 @@ export interface FileObjResolveType extends FileObjType {
     cookie?: string
 }
 
-export type SettingType = {
-    url: string;
-    token: string;
-    dir: string;
-    check: boolean;
-    checkMin: string;
-    interval: string;
-};
+
+export type SettingType = Partial<typeof defaultSetting>
+export type SettingKeyType = keyof SettingType;

@@ -1,5 +1,6 @@
 import { GM_xmlhttpRequest, GM_setValue, GM_getValue } from '$';
-import { SettingType } from './types';
+import { defaultSetting } from './constant';
+import { SettingKeyType, SettingType } from './types';
 
 export const waitTime = (t?: number) => {
     t = t || parseInt(getSetting().interval) || 300;
@@ -7,17 +8,18 @@ export const waitTime = (t?: number) => {
 };
 
 export const updateInterval = (t: string) => {
-    t = t.trim()
+    t = t.trim();
     let t2 = parseInt(t);
-    if(t2 !== t2) return
-    if (t2 < 300){ t2 = 100 }
+    if (t2 !== t2) return;
+    if (t2 < 300) {
+        t2 = 100;
+    }
     const t3 = t2.toString();
     saveSetting({
         ...getSetting(),
-        interval: t3
-    })
+        interval: t3,
+    });
 };
-
 
 export const xhrGet = (url: string, headers?: any) => {
     return new Promise((resolve, reject) => {
@@ -103,26 +105,24 @@ export const xhrPost = <T2 = unknown>(
 export const xhr115 = () => {};
 
 export const saveSetting = (data: SettingType) => {
-    GM_setValue('115aria2_config', JSON.stringify(data));
+    const n: any = {};
+    let key: SettingKeyType;
+    for (key in defaultSetting) {
+        if (Object.prototype.hasOwnProperty.call(defaultSetting, key)) {
+            const element = defaultSetting[key];
+            if (data[key] !== element || key === 'customUserAgent') {
+                n[key] = data[key];
+            }
+        }
+    }
+    GM_setValue('115aria2_config', JSON.stringify(n));
 };
 
-export const defaultSetting = {
-    url: 'http://127.0.0.1:6800/jsonrpc',
-    token: '123456',
-    dir: '',
-    check: false,
-    checkMin: '0',
-    interval: '300',
-};
-
-type settingType = typeof defaultSetting;
-type settingKeyType = keyof settingType;
-
-export const getSetting = (): settingType => {
+export const getSetting = (): Required<SettingType> => {
     try {
         var data = JSON.parse(GM_getValue('115aria2_config', ''));
-        (Object.keys(defaultSetting) as settingKeyType[]).forEach(
-            (o: settingKeyType) => {
+        (Object.keys(defaultSetting) as SettingKeyType[]).forEach(
+            (o: SettingKeyType) => {
                 if (data[o] == null) {
                     data[o] = defaultSetting[o];
                 }
@@ -132,6 +132,12 @@ export const getSetting = (): settingType => {
     } catch (error) {
         return defaultSetting;
     }
+};
+
+export const getUA = () => {
+    const { useSystemUserAgent, customUserAgent } = getSetting();
+    if (useSystemUserAgent) return navigator.userAgent;
+    return customUserAgent || '';
 };
 
 export function uuid() {
@@ -148,7 +154,6 @@ export function uuid() {
 }
 
 export class defer<T = void> {
-
     resolve: ((value: T) => void) | null = null;
     reject: ((value: T) => void) | null = null;
     id: string;

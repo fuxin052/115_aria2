@@ -1,6 +1,6 @@
 // import { BaiduPan } from './main';
 import { FileObjResolveType } from './types';
-import { getSetting, xhrPost } from './utils';
+import { getSetting, xhrPost, getUA } from './utils';
 
 export class DownloadTool {
     domain: string;
@@ -25,7 +25,7 @@ export class DownloadTool {
             dir: this.dir || undefined,
             out: filename,
             header: [
-                `User-Agent: ${navigator.userAgent}`,
+                `User-Agent: ${getUA()}`,
                 `Referer: https://115.com/`,
             ],
         };
