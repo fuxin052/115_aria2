@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         115pan_aria2
 // @namespace    115pan_aria2
-// @version      1.1.6
+// @version      1.1.7
 // @author       f
 // @description  115文件导出到 Aria2
 // @icon         https://115.com/web_icon.jpg
@@ -29,7 +29,7 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-var vite_plugin_monkey_599159e48f2f4 = function(exports) {
+var vite_plugin_monkey_91fd95f990b59 = function(exports) {
   var _a, _b;
   "use strict";
   var n, l$1, u$2, t, o$3, f$1 = {}, e$1 = [], c$1 = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
@@ -490,17 +490,17 @@ var vite_plugin_monkey_599159e48f2f4 = function(exports) {
   };
   function getCookieFromHeader(params) {
     var _a2;
-    var setCookieStrings = ((_a2 = params.match(/^.*$/gm)) == null ? void 0 : _a2.filter((c2) => c2.toLowerCase().startsWith("set-cookie"))) || [];
+    var setCookieStrings = ((_a2 = params.match(/^.*$/gm)) == null ? void 0 : _a2.filter((c2) => /^set-cookie:/gi.test(c2) || /^tm-setcookiedhdg-\d:/gi.test(c2))) || [];
+    const ret = [];
     for (let index2 = 0; index2 < setCookieStrings.length; index2++) {
-      const setCookieStr = setCookieStrings[index2].replace(/^set-cookie:\s+/gi, "");
+      const setCookieStr = setCookieStrings[index2].replace(/^set-cookie:\s+/gi, "").replace(/^tm-setcookiedhdg-\d:\s+/gi, "");
       const cookies = setCookieStr.replace(/expires=(.*?)GMT/g, "").split(", ");
       for (let j2 = 0; j2 < cookies.length; j2++) {
         const cookieStr = cookies[j2];
-        if (cookieStr.toLowerCase().startsWith("acw_tc=")) {
-          return cookieStr.replace(/\s?;.*$/, "");
-        }
+        ret.push(cookieStr.replace(/\s?;.*$/, ""));
       }
     }
+    return ret.join("; ");
   }
   const xhrPost = (url, data, headers) => {
     if (Object.prototype.toString.call(data) === "[object Object]") {
@@ -514,6 +514,7 @@ var vite_plugin_monkey_599159e48f2f4 = function(exports) {
         data,
         responseType: "json",
         onload: (res) => {
+          console.log("res: ", res);
           var cookie = getCookieFromHeader((res == null ? void 0 : res.responseHeaders) || "");
           var response = res.response || res.responseText;
           if (cookie) {
@@ -523,7 +524,10 @@ var vite_plugin_monkey_599159e48f2f4 = function(exports) {
             } catch (error) {
             }
           } else {
-            response.cookie = h("115cookie", "");
+            try {
+              response.cookie = h("115cookie", "");
+            } catch (error) {
+            }
           }
           if (res.status === 200) {
             resolve(response);

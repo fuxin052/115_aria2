@@ -45,22 +45,27 @@ function getCookieFromHeader(params: string) {
     var setCookieStrings =
         params
             .match(/^.*$/gm)
-            ?.filter(c => c.toLowerCase().startsWith('set-cookie')) || [];
+            ?.filter(
+                c =>
+                    /^set-cookie:/gi.test(c) ||
+                    /^tm-setcookiedhdg-\d:/gi.test(c)
+            ) || [];
+
+    const ret = [];
     for (let index = 0; index < setCookieStrings.length; index++) {
-        const setCookieStr = setCookieStrings[index].replace(
-            /^set-cookie:\s+/gi,
-            ''
-        );
+        const setCookieStr = setCookieStrings[index]
+            .replace(/^set-cookie:\s+/gi, '')
+            .replace(/^tm-setcookiedhdg-\d:\s+/gi, '');
         const cookies = setCookieStr
             .replace(/expires=(.*?)GMT/g, '')
             .split(', ');
+
         for (let j = 0; j < cookies.length; j++) {
             const cookieStr = cookies[j];
-            if (cookieStr.toLowerCase().startsWith('acw_tc=')) {
-                return cookieStr.replace(/\s?;.*$/, '');
-            }
+            ret.push(cookieStr.replace(/\s?;.*$/, ''));
         }
     }
+    return ret.join('; ');
 }
 
 export const xhrPost = <T2 = unknown>(
@@ -79,16 +84,21 @@ export const xhrPost = <T2 = unknown>(
             data,
             responseType: 'json',
             onload: res => {
+                console.log('res: ', res);
                 var cookie = getCookieFromHeader(res?.responseHeaders || '');
                 var response: any = res.response || res.responseText;
+
                 if (cookie) {
                     GM_setValue('115cookie', cookie);
                     try {
                         response.cookie = cookie;
                     } catch (error) {}
                 } else {
-                    response.cookie = GM_getValue('115cookie', '');
+                    try {
+                        response.cookie = GM_getValue('115cookie', '');
+                    } catch (error) {}
                 }
+
                 if (res.status === 200) {
                     resolve(response as T2);
                 } else {
