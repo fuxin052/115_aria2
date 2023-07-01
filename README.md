@@ -15,7 +15,7 @@
 ## 常见问题
 
 ### 2023年7月1日后下载失败(没速度)
-1. 先更新脚本到1.1.7(点击上面的下载链接重新安装即可) 如果可以下载了后面就不用看了
+1. 先更新脚本到[1.1.7](https://github.com/fuxin052/115_aria2/raw/main/dist/115pan_aria2.user.js) 如果可以下载了后面就不用看了
 2. 将自定义UA的`使用浏览器UA`勾勾取消, 然后将下方输入框内容修改为`Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36 115Browser/25.0.6.5`即可
 
 ### 下载的文件名和115上不一样
