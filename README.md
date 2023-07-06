@@ -1,5 +1,7 @@
 # 115网盘导出下载链接到aria2油猴脚本
 
+[![HitCount](https://hits.dwyl.com/fuxin052/115_aria2.svg?style=flat-square)](http://hits.dwyl.com/fuxin052/115_aria2)
+
 **安装地址 https://github.com/fuxin052/115_aria2/raw/main/dist/115pan_aria2.user.js**
 
 ## 设置：鼠标右键点击按钮可以打开设置界面
@@ -39,6 +41,7 @@
 > 如果你的aria2地址为`http://baidu.com:6800/jsonrpc`, 那么这一行改为 `// @connect      baidu.com`
 
 ![image](https://user-images.githubusercontent.com/46592199/213326074-0fc06090-888d-4d27-9158-bb6cba4cfb39.png)
+
 
 
 
